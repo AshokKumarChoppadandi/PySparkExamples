@@ -1,0 +1,58 @@
+# CREATING A LIST OF STRINGS
+list1 = [
+"hadoop hadoop spark",
+"kafka cassandra hbase",
+"hadoop hadoop spark",
+"kafka cassandra hbase hadoop hadoop spark hadoop hadoop spark",
+"hadoop hadoop spark",
+"kafka cassandra hbase",
+"hadoop hadoop spark",
+"kafka cassandra hbase hadoop hadoop spark hadoop hadoop spark",
+"hadoop hadoop spark",
+"kafka cassandra hbase",
+"hadoop hadoop spark",
+"kafka cassandra hbase",
+"hadoop hadoop spark hadoop hadoop spark",
+"kafka cassandra hbase",
+"kafka cassandra hbase"
+]
+
+# WORD COUNT
+
+rdd = sc.parallelize(list1, 4)
+rdd2 = rdd.flatMap(lambda x: x.split(' '))
+rdd3 = rdd2.map(lambda x: (x, 1))
+rdd4 = rdd3.reduceBykey(lambda x,y: x+y)
+result1 = rdd4.collect()
+
+for (word, wordCount) in result1:
+  print("%s -> %i" % (word, wordCount))
+
+
+# TOTAL LENGTH OF THE FILE
+
+data1 = sc.textFile('/home/ashok/IdeaProjects/PySparkExamples/PythonShellCommands/words.txt')
+data1.count()
+data1.first()
+data2 = data1.map(lambda x: len(x))
+data2.foreach(print)
+data3 = data2.reduce(lambda x,y: x+y)
+print("Total length of the file : %i" % data3)
+
+# LINES WITH ODD LINE LENGTH
+
+data1 = sc.textFile('/home/ashok/IdeaProjects/PySparkExamples/PythonShellCommands/words.txt')
+data2 = data1.map(lambda x: (x, len(x)))
+data3 = data2.filter(lambda x: x[1] % 2 != 0)
+data4 = data3.map(lambda x: x[0])
+data4.foreach(print)
+
+# LINES WITH PRIME LINE LENGTH
+
+data1 = sc.textFile('/home/ashok/IdeaProjects/PySparkExamples/PythonShellCommands/words.txt')
+data2 = data1.map(lambda x: (x, len(x)))
+data3 = data2.filter(lambda x: is_prime(x))
+data3 = data2.filter(lambda x: is_prime(x[1]))
+data3.foreach(print)
+data4 = data3.map(lambda x: x[0])
+data4.foreach(print)
